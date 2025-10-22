@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagamento - Pixel Drop</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: "Inter", system-ui, sans-serif;
+      background: linear-gradient(180deg, #050b1b, #0a1328);
+      color: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .pix-box {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 24px;
+      border-radius: 16px;
+      width: 380px;
+      box-shadow: 0 8px 28px rgba(0,0,0,.5);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 16px;
+      font-weight: 700;
+      color: #06b6d4;
+    }
+
+    .cart-items {
+      text-align: left;
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: #d1d5db;
+    }
+
+    .total {
+      font-size: 18px;
+      font-weight: 600;
+      margin-top: 10px;
+      color: #fff;
+    }
+
+    .discount-info {
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.3);
+      padding: 8px;
+      border-radius: 8px;
+      color: #4ade80;
+      font-size: 13px;
+      margin: 8px 0;
+    }
+
+    .qr {
+      display: flex;
+      justify-content: center;
+      margin: 16px 0;
+    }
+
+    .pix-key-box {
+      background: #0b1220;
+      padding: 12px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+      user-select: all;
+    }
+
+    .copy-btn {
+      background: #06b6d4;
+      color: #0a0a0a;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: #0ea5e9;
+    }
+
+    .back-btn {
+      margin-top: 18px;
+      background: transparent;
+      border: 1px solid #06b6d4;
+      color: #06b6d4;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background: #06b6d4;
+      color: #0a0a0a;
+    }
+
+    .muted {
+      color: #9ca3af;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="pix-box">
+    <h2>Pagamento PIX</h2>
+
+    <div id="cartItems" class="cart-items"></div>
+
+    <div id="discountInfo" class="discount-info" style="display:none;"></div>
+
+    <div class="total">
+      Total: <span id="totalValue">R$ 0,00</span>
+    </div>
+
+    <div class="qr">
+      <img id="qrImage" src="assets/qrcode.png" alt="QR Code PIX" width="180" height="180">
+    </div>
+
+    <div class="pix-key-box">
+      <span id="pixKey">b39fb7e6-09b8-4343-94a5-4f802bee4dd7</span>
+      <button class="copy-btn" id="copyPix">Copiar</button>
+    </div>
+
+    <p class="muted" style="margin-top:10px;">Após o pagamento, entre no nosso Discord e envie o comprovante no canal <strong>📩・abrir-ticket</strong>.</p>
+
+    <button class="back-btn" onclick="window.location.href='index.html'">Voltar à Loja</button>
+  </div>
+
+  <script>
+    const formatBRL = (n) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    const defaultPixKey = "b39fb7e6-09b8-4343-94a5-4f802bee4dd7";
+
+    // --- Lê o carrinho salvo ---
+    const cartData = JSON.parse(localStorage.getItem("pixelDropCart") || '{"items":[],"total":0}');
+    const cartEl = document.getElementById("cartItems");
+    const totalEl = document.getElementById("totalValue");
+    const discountEl = document.getElementById("discountInfo");
+
+    let total = 0;
+    let desconto = 0;
+    let descontoPercent = 0;
+    let usado = localStorage.getItem("cupomUsado");
+
+    if (cartData.items && cartData.items.length > 0) {
+      cartData.items.forEach(p => {
+        const item = document.createElement("div");
+        item.innerHTML = `• ${p.name} x${p.qty || 1} — ${formatBRL(p.price * (p.qty || 1))}`;
+        cartEl.appendChild(item);
+        total += p.price * (p.qty || 1);
+      });
+
+      // Detectar desconto
+      if (cartData.total < total) {
+        desconto = total - cartData.total;
+        descontoPercent = Math.round((desconto / total) * 100);
+        discountEl.innerHTML = `
+          🏷️ Usou cupom <strong>${usado || "desconhecido"}</strong> e ganhou <strong>${descontoPercent}%</strong> de desconto
+          <br><span style="color:#86efac;">(Economizou ${formatBRL(desconto)})</span>
+        `;
+        discountEl.style.display = "block";
+      }
+
+      totalEl.textContent = formatBRL(cartData.total);
+    } else {
+      cartEl.textContent = "Carrinho vazio ou dados não encontrados 😢";
+    }
+
+    // --- Copiar chave PIX ---
+    document.getElementById("pixKey").textContent = defaultPixKey;
+    document.getElementById("copyPix").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(defaultPixKey);
+        const btn = document.getElementById("copyPix");
+        btn.textContent = "Copiado!";
+        setTimeout(() => (btn.textContent = "Copiar"), 1500);
+      } catch {
+        alert("Não foi possível copiar a chave PIX.");
+      }
+    });
+  </script>
+</body>
+</html>
