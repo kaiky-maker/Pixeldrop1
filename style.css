@@ -279,3 +279,52 @@ input.error {
   border-color: #f87171 !important;
   animation: shake 0.3s;
 }
+
+/* === Versão Mobile (até 768px de largura) === */
+@media (max-width: 768px) {
+  header nav {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+
+  .product-card {
+    width: 100%;
+    margin: 0 auto 16px auto;
+  }
+
+  .drawer {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .drawer-footer {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .cupom-area input {
+    width: 100%;
+  }
+
+  .checkout-btn {
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .pix-box {
+    width: 90%;
+    padding: 20px;
+  }
+
+  #contatoButton {
+    width: 60px;
+    height: 60px;
+    bottom: 15px;
+    right: 15px;
+  }
+}
