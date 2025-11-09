@@ -453,3 +453,112 @@ checkoutBtn.addEventListener('click', () => {
 
   window.location.href = "payment.html";
 });
+
+// ===== CARROSSEL =====
+document.addEventListener('DOMContentLoaded', function() {
+  const carrossel = document.getElementById('carrossel');
+  const indicadoresContainer = document.getElementById('indicadores');
+  const btnAnterior = document.getElementById('anterior');
+  const btnProximo = document.getElementById('proximo');
+  
+  // Array de imagens do carrossel - ADICIONE MAIS IMAGENS AQUI
+  const slidesData = [
+    { 
+      imagem: "assets/suporte24H.png", 
+      link: "contato.html"  // Altere para o link desejado
+    },
+    { 
+      imagem: "assets/Discord.png", 
+      link: "https://discord.gg/Sk9nc7wWFz"
+    },
+    { 
+      imagem: "assets/melhorespreços.png", 
+      link: "#catalogo"  // Link para a seção de produtos
+    }
+    // PARA ADICIONAR MAIS IMAGENS, COLE AQUI:
+    // { 
+    //   imagem: "assets/nova-imagem.png", 
+    //   link: "https://exemplo.com" 
+    // },
+  ];
+
+  let slideAtual = 0;
+  const totalSlides = slidesData.length;
+
+  // Criar slides
+  slidesData.forEach((slide, index) => {
+    const slideElement = document.createElement('a');
+    slideElement.className = 'slide';
+    slideElement.href = slide.link;
+    slideElement.innerHTML = `
+      <img src="${slide.imagem}" alt="Slide ${index + 1}">
+    `;
+    carrossel.appendChild(slideElement);
+
+    // Criar indicadores
+    const indicador = document.createElement('button');
+    indicador.className = 'indicador' + (index === 0 ? ' ativo' : '');
+    indicador.setAttribute('data-indice', index);
+    indicadoresContainer.appendChild(indicador);
+  });
+
+  const slides = document.querySelectorAll('.slide');
+  const indicadores = document.querySelectorAll('.indicador');
+
+  function atualizarCarrossel() {
+    slides.forEach((slide, index) => {
+      slide.className = 'slide';
+      
+      // Calcular a posição relativa considerando loop infinito
+      let posicaoRelativa = (index - slideAtual + totalSlides) % totalSlides;
+      
+      if (posicaoRelativa === 0) {
+        // Slide central
+        slide.classList.add('central');
+      } else if (posicaoRelativa === 1) {
+        // Slide direito
+        slide.classList.add('direita-1');
+      } else if (posicaoRelativa === totalSlides - 1) {
+        // Slide esquerdo
+        slide.classList.add('esquerda-1');
+      } else {
+        // Slides escondidos (apenas 3 visíveis)
+        slide.classList.add('escondido');
+      }
+    });
+
+    // Atualizar indicadores
+    indicadores.forEach((ind, index) => {
+      ind.classList.toggle('ativo', index === slideAtual);
+    });
+  }
+
+  // Próximo slide com loop infinito
+  btnProximo.addEventListener('click', function() {
+    slideAtual = (slideAtual + 1) % totalSlides;
+    atualizarCarrossel();
+  });
+
+  // Slide anterior com loop infinito
+  btnAnterior.addEventListener('click', function() {
+    slideAtual = (slideAtual - 1 + totalSlides) % totalSlides;
+    atualizarCarrossel();
+  });
+
+  // Navegação pelos indicadores
+  indicadores.forEach(ind => {
+    ind.addEventListener('click', function() {
+      slideAtual = parseInt(this.getAttribute('data-indice'));
+      atualizarCarrossel();
+    });
+  });
+
+  // Auto-play a cada 6 segundos
+  setInterval(function() {
+    slideAtual = (slideAtual + 1) % totalSlides;
+    atualizarCarrossel();
+  }, 6000);
+
+  // Inicializar
+  atualizarCarrossel();
+});

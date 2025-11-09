@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #1a1a2e;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .loading-container {
+            text-align: center;
+            position: relative;
+        }
+
+        .drop-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+        }
+
+        .drop {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(to bottom, #3498db, #2980b9);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: drop-fall 2s infinite ease-in-out;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.7);
+        }
+
+        .drop::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            width: 8px;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+        }
+
+        .ripple {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 20px;
+            background-color: rgba(52, 152, 219, 0.3);
+            border-radius: 50%;
+            animation: ripple 2s infinite ease-in-out;
+        }
+
+        .text {
+            color: #ecf0f1;
+            font-size: 24px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: text-pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes drop-fall {
+            0% {
+                top: 0;
+                transform: translateX(-50%) scale(1);
+            }
+            50% {
+                top: 80px;
+                transform: translateX(-50%) scale(0.9);
+            }
+            100% {
+                top: 0;
+                transform: translateX(-50%) scale(1);
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+            50% {
+                width: 60px;
+                height: 20px;
+                opacity: 0.5;
+            }
+            100% {
+                width: 100px;
+                height: 30px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes text-pulse {
+            0%, 100% {
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <div class="drop-container">
+            <div class="drop"></div>
+            <div class="ripple"></div>
+        </div>
+        <div class="text">em breve</div>
+    </div>
+
+    <script>
+        // Adicionando efeito de partículas de água
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropContainer = document.querySelector('.drop-container');
+            
+            // Criar partículas que saltam quando a gota cai
+            setInterval(() => {
+                setTimeout(() => {
+                    for (let i = 0; i < 4; i++) {
+                        createWaterParticle();
+                    }
+                }, 1000); // Tempo para sincronizar com a animação da gota
+            }, 2000);
+            
+            function createWaterParticle() {
+                const particle = document.createElement('div');
+                particle.classList.add('water-particle');
+                
+                // Posicionar na base da gota
+                particle.style.position = 'absolute';
+                particle.style.bottom = '0';
+                particle.style.left = '50%';
+                particle.style.width = '8px';
+                particle.style.height = '8px';
+                particle.style.backgroundColor = 'rgba(52, 152, 219, 0.7)';
+                particle.style.borderRadius = '50%';
+                particle.style.transform = 'translateX(-50%)';
+                
+                // Animar a partícula
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 20 + Math.random() * 30;
+                const duration = 800 + Math.random() * 400;
+                
+                particle.style.animation = `water-particle ${duration}ms forwards`;
+                
+                // Adicionar keyframes dinamicamente
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes water-particle {
+                        0% {
+                            transform: translateX(-50%) translateY(0) scale(1);
+                            opacity: 1;
+                        }
+                        100% {
+                            transform: translateX(${Math.cos(angle) * distance}px) translateY(-${Math.sin(angle) * distance}px) scale(0);
+                            opacity: 0;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                dropContainer.appendChild(particle);
+                
+                // Remover após a animação
+                setTimeout(() => {
+                    particle.remove();
+                    style.remove();
+                }, duration);
+            }
+        });
+    </script>
+</body>
+</html>

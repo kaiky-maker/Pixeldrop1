@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pixel Drop — Loja</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    /* --- Estilos inline mínimos e específicos (apenas para elementos adicionados aqui) --- */
+
+    /* Estilos para o botão de contato flutuante */
+    #contatoButton {
+      height: 60px;
+      width: 60px;
+      border-radius: 50%;
+      border: 2px solid #000;
+      background-color: #05a3bf;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      z-index: 999;
+      animation: pulse-contato 3s infinite;
+    }
+
+    #contatoButton img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      transition: transform 0.5s ease;
+      position: relative;
+    }
+
+    @keyframes pulse-contato {
+      0% { transform: scale(1); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+      50% { transform: scale(1.05); box-shadow: 0 6px 12px rgba(5,163,191,0.4); }
+      100% { transform: scale(1); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+    }
+
+    #contatoButton:hover {
+      transform: scale(1.08);
+      background-color: #048ba3;
+      box-shadow: 0 8px 16px rgba(5,163,191,0.6);
+    }
+
+    #contatoButton:hover img {
+      transform: translateY(-4px) scale(1.08);
+    }
+
+    /* efeito de borda rotativa sutil */
+    #contatoButton::after {
+      content: '';
+      position: absolute;
+      width: 110%;
+      height: 110%;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      background: linear-gradient(45deg, #05a3bf, #048ba3, #05a3bf);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #contatoButton:hover::after {
+      opacity: 1;
+      animation: rotate-border 2s linear infinite;
+    }
+
+    @keyframes rotate-border { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* --- Estilos para o botão do Instagram (footer) - classe específica --- */
+    .insta-btn {
+      display: inline-block;
+      padding: 10px;
+      border-radius: 50%;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .insta-btn img { width: 60px; height: 60px; object-fit: contain; filter: brightness(0) invert(1); transition: transform 0.25s ease; }
+
+    @keyframes pulse-insta {
+      0% { transform: scale(1);}
+      50% { transform: scale(1.04);}
+      100% { transform: scale(1); }
+    }
+
+    .insta-btn:hover { transform: scale(1.08) rotate(2deg);
+    .insta-btn:hover img { transform: scale(1.12); }
+
+    /* --- Botões do site (aplicáveis somente aos botões com classe .btn) --- */
+    .btn {
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+      will-change: transform;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.16);
+    }
+
+    /* Pequenas correções de acessibilidade/posição */
+    .modal .close, .icon-btn { cursor: pointer; border: none; background: transparent; font-size: 1.1rem; }
+    .drawer { z-index: 900; }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="brand">
+      <div class="drop"></div>
+      <span>Pixel Drop</span>
+    </div>
+    <nav class="menu" id="navbar">
+<a href="login.html" style="
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #0f2a48, #153a63);
+  border: 2px solid #ffffff;
+  border-radius: 12px;
+  padding: 10px 18px;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+" 
+onmouseover="this.style.background='linear-gradient(135deg, #153a63, #1f4f88)'; this.style.boxShadow='0 0 18px rgba(255, 255, 255, 0.6)'; this.style.transform='translateY(-2px)'"
+onmouseout="this.style.background='linear-gradient(135deg, #0f2a48, #153a63)'; this.style.boxShadow='0 0 10px rgba(255, 255, 255, 0.3)'; this.style.transform='translateY(0)'"
+onmousedown="this.style.transform='scale(0.96)'; this.style.boxShadow='0 0 6px rgba(255, 255, 255, 0.4)'"
+onmouseup="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 0 18px rgba(255, 255, 255, 0.6)'"
+>
+  <img src="assets/login.png" alt="" style="
+    width: 26px;
+    height: 26px;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+  ">
+  <span style="letter-spacing: 0.5px;">Login</span>
+</a>
+      <button id="openCart" class="btn ghost" aria-haspopup="dialog">Carrinho <span id="cartCount">0</span></button>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <h1 class="title">Pixel<span class="stroke">Drop</span></h1>
+      <p class="subtitle">Presets com qualidade e pagamento com confiança</p>
+      <a href="#catalogo" class="btn primary">Ver produtos</a>
+    </div>
+    <div class="hero-bg"></div>
+  </section>
+
+          <!-- Carrossel -->
+<section class="carrossel-section">
+  <div class="carrossel-container">
+    <div class="carrossel" id="carrossel">
+      <!-- Slides serão inseridos dinamicamente -->
+    </div>
+
+    <!-- Controles de navegação -->
+    <div class="controles">
+      <button class="controle" id="anterior">❮</button>
+      <button class="controle" id="proximo" style="margin-right: 90px;">❯</button>
+    </div>
+
+    <!-- Indicadores -->
+    <div class="indicadores" id="indicadores">
+      <!-- Indicadores serão inseridos dinamicamente -->
+    </div>
+  </div>
+</section>
+
+  <main id="catalogo" class="grid">
+    <!-- Os cards são gerados em script.js -->
+  </main>
+
+  <!-- Modal -->
+  <div id="discordModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="discordTitle" style="display:none;">
+    <div class="modal-content">
+      <button class="close" aria-label="Fechar aviso">×</button>
+      <h2 id="discordTitle">⚠️ AVISO ⚠️</h2>
+      <p>Se você for comprar algo entre no nosso servidor do discord para receber o produto no canal <strong>ABRIR TICKET</strong></p>
+      <a href="https://discord.gg/Sk9nc7wWFz" target="_blank" class="discord-btn btn">Entrar no Discord</a>
+      <button id="closePermanently" class="btn ghost">Não mostrar novamente</button>
+    </div>
+  </div>
+
+<!-- Drawer do carrinho -->
+<aside id="cartDrawer" class="drawer" aria-hidden="true">
+  <div class="drawer-header">
+    <h3>Carrinho</h3>
+    <button id="closeCart" class="icon-btn" aria-label="Fechar">✕</button>
+  </div>
+
+  <!-- Itens do carrinho (JS injeta aqui) -->
+  <div id="cartItems" class="drawer-body"></div>
+
+  <!-- Rodapé do carrinho -->
+  <div class="drawer-footer">
+    <div class="total-line">
+      <span>Total</span><strong id="cartTotal">R$ 0,00</strong>
+    </div>
+
+    <!-- Área de cupom -->
+    <div class="coupon-area">
+      <input type="text" id="couponInput" placeholder="Cupom de desconto">
+      <button id="applyCoupon" class="btn ghost">Aplicar</button>
+      <p id="couponMsg" class="muted"></p>
+    </div>
+
+    <!-- Finalizar compra -->
+    <button id="checkoutBtn" class="btn primary block">Finalizar compra</button>
+  </div>
+</aside>
+  <div id="scrim" class="scrim" hidden></div>
+
+  <!-- Modal do PIX -->
+  <dialog id="checkoutModal" class="modal">
+    <form method="dialog">
+      <header class="modal-header">
+        <h3>Pagamento PIX</h3>
+        <button class="icon-btn" aria-label="Fechar">✕</button>
+      </header>
+      <div id="checkoutContent" class="modal-body"></div>
+      <footer class="modal-footer">
+        <button class="btn ghost" value="cancel">Fechar</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <div class="drawer-footer">
+  <div class="total-line">
+  </div>
+
+<!-- Botão de contato flutuante -->
+<button>
+<a href="contato.html" id="contatoButton" aria-label="Contato">
+  <img src="assets/atendente.png" alt="Contato">
+</a>
+</button>
+
+
+  <footer class="foot">
+    <h2 style="color: #ffffff;">Redes Sociais</h2>
+
+    <a class="insta-btn" href="https://www.instagram.com/pixeldrop.oficial?igsh=MTd3dGY4cHNiMzM0dA%3D%3D" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="margin-left: auto; margin-right: auto;">
+      <img src="assets/instagram.png" alt="Instagram">
+    </a>
+
+    <p>© Pixel Drop 2025 — Todos os direitos reservados.</p>
+  </footer>
+
+  <script src="script.js"></script>
+
+  <script>
+    document.addEventListener('click', (e) => {
+      if (e.target.matches('.close')) {
+        const modal = e.target.closest('.modal');
+    });
+
+    const openCart = document.getElementById('openCart');
+    const cartDrawer = document.getElementById('cartDrawer');
+    const closeCart = document.getElementById('closeCart');
+    const scrim = document.getElementById('scrim');
+
+    function showDrawer() {
+      cartDrawer.setAttribute('aria-hidden', 'false');
+      cartDrawer.style.transform = 'translateX(0)';
+      scrim.hidden = false;
+    }
+    function hideDrawer() {
+      cartDrawer.setAttribute('aria-hidden', 'true');
+      cartDrawer.style.transform = '';
+      scrim.hidden = true;
+    }
+
+    if (openCart && closeCart && cartDrawer) {
+      openCart.addEventListener('click', showDrawer);
+      closeCart.addEventListener('click', hideDrawer);
+      scrim.addEventListener('click', hideDrawer);
+    }
+  </script>
+</body>
+</html>
